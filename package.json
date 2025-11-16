@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "devStart": "nodemon server.js"
+    "devStart": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +14,11 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.5",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^24.10.1",
     "dotenv": "^17.2.3",
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
   }
 }

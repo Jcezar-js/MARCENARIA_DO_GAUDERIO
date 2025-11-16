@@ -52,6 +52,35 @@ if (!name || !description || !price == null) {
   }
 });
 
+// Rota para editar o produto pelo ID
+router.patch('/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (product == null){
+      return res.status(404).json({message: 'Produto não encontrado'});
+    } 
+    const {name, description, price, photos, isFeatured} = req.body;
+    if (name != null) {
+      product.name = name;
+    }
+    if (description != null) {
+      product.description = description;
+    }
+    if (price != null) {
+      product.price = price;
+    }
+    if (photos != null) {
+      product.photos = photos;
+    }
+    if (isFeatured != null) {
+      product.isFeatured = isFeatured;
+    }
+    const updatedProduct = await product.save();
+    res.json(updatedProduct);
 
+  } catch (err){
+    res.status(400).json({ message: err.message });
+  }
+})
 
 module.exports = router;
