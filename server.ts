@@ -1,8 +1,9 @@
 require('dotenv').config()
 
 import express from 'express'
-const app = express()
 import mongoose from 'mongoose'
+import productsRouter from './Routes/product_routes'
+const app = express()
 const DB_URL = process.env.DATABASE_URL
 const PORT = process.env.PORT || 3001
 
@@ -19,7 +20,6 @@ db.once('open', () => console.log('Connected to Database'))
 
 app.use(express.json())
 
-const productsRouter = require('./Routes/product_route')
 
 app.use('/api/products', productsRouter)
 

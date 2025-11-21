@@ -1,6 +1,7 @@
 import express, {Request, Response} from "express";
 const router = express.Router();  
 import Product from '../models/product_schema';
+
 // Rota para obter todos os produtos 
 
 router.get ('/', async (req: Request, res: Response) => {
@@ -53,7 +54,7 @@ if (!name || !description || !price == null) {
 
 // Rota para atualizar (Patch) um produto existente
 
-router.patch('/:id', Product, async (req: Request, res: Response) => {
+router.patch('/:id', async (req: Request, res: Response) => {
   try {
     const product = await Product.findById(req.params.id);
     if (product == null){
@@ -83,4 +84,4 @@ router.patch('/:id', Product, async (req: Request, res: Response) => {
   }
 })
 
-module.exports = router;
+export default router;
