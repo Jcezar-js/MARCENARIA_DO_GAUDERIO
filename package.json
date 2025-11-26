@@ -11,7 +11,8 @@
   "dependencies": {
     "express": "^5.1.0",
     "mongoos": "^0.0.1-security",
-    "mongoose": "^8.20.1"
+    "mongoose": "^8.20.1",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/express": "^5.0.5",

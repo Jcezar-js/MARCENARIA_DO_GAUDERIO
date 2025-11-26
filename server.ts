@@ -1,8 +1,9 @@
-require('dotenv').config()
-
+import dotenv from 'dotenv'
+dotenv.config()
 import express from 'express'
 import mongoose from 'mongoose'
-import productsRouter from './Routes/product_routes'
+import productsRouter from './routes/product_routes'
+
 const app = express()
 const DB_URL = process.env.DATABASE_URL
 const PORT = process.env.PORT || 3001
@@ -20,7 +21,7 @@ db.once('open', () => console.log('Connected to Database'))
 
 app.use(express.json())
 
-
+// Usar as rotas de produtos
 app.use('/api/products', productsRouter)
 
 app.listen(PORT,()=>console.log('Server Started on port ', PORT));
