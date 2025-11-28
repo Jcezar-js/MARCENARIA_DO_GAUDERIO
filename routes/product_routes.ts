@@ -3,7 +3,8 @@ import {
   getAllProducts,
   getProductById,
   createProduct,
-  updateProduct
+  updateProduct,
+  deleteProduct
 } from '../controllers/product_controller'
 
 const router = express.Router();
@@ -18,6 +19,9 @@ router.get('/:id', getProductById);
 router.post('/', createProduct);
 
 // Rota para atualizar um produto existente
-router.put('/:id', updateProduct);
+router.patch('/:id', updateProduct);
+
+// Rota para deletar um produto
+router.delete('/:id', deleteProduct);
 
 export default router;
