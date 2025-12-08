@@ -1,4 +1,5 @@
-import express, {Request, Response} from "express";
+import express from 'express';
+import {authMiddleware} from '../middlewares/auth_middleware';
 import {
   getAllProducts,
   getProductById,
@@ -8,20 +9,13 @@ import {
 } from '../controllers/product_controller'
 
 const router = express.Router();
-
-// Rota para obter todos os produtos
+//Rotas de produto públicas
 router.get('/', getAllProducts);
-
-// Rota para obter um produto por ID
 router.get('/:id', getProductById);
 
-// Rota para criar um novo produto
-router.post('/', createProduct);
-
-// Rota para atualizar um produto existente
-router.patch('/:id', updateProduct);
-
-// Rota para deletar um produto
-router.delete('/:id', deleteProduct);
+//Roras protegidas
+router.post('/', authMiddleware, createProduct);
+router.patch('/:id', authMiddleware, updateProduct);
+router.delete('/:id', authMiddleware, deleteProduct);
 
 export default router;

@@ -3,7 +3,7 @@ import User from '../models/user_schema';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {z} from 'zod';
-//password validation schema
+//user validation schema
 const userSchema = z.object({
   name: z
     .string({ error : "O nome é obrigatório"})
@@ -46,7 +46,30 @@ export const register = async (req: Request, res: Response) => {
 
 //login user
 export const login = async (req: Request, res: Response)=> {
-  const {nqme, email, password} = req.body;
 
+  const {email, password} = req.body;
+  try{
+    const user = await User.findOne({email});
+    if(!user){
+      return  res.status(401).json({message: 'Credenciais inválidas'});
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if(!isPasswordValid){
+      return res.status(401).json({message: 'Credenciais inválidas'});
+    }
 
+    const secret = process.env.JWT_SECRET;
+    if(!secret) throw new Error('JWT_SECRET não está deinido');
+
+    const token = jwt.sign(
+      {id: user._id, role: 'user'},
+      secret,
+      {expiresIn: '1d'}
+    );
+
+    return res.json ({ token, userId: user._id});
+  
+  } catch (err: any){
+    return res.status(500).json({message: 'Erro interno no servidor'});
+  }
 };
