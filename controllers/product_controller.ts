@@ -9,13 +9,13 @@ const productSchema = z.object({
   description: z
     .string()
     .min(1, 'A descrição é obrigatória'),
-  price: z
+  price: z.coerce
     .number()
     .nonnegative('O preço deve ser um número positivo'),
   photos: z
     .array(z.string().url())
     .optional(),
-  isFeatured: z
+  isFeatured: z.coerce
     .boolean()
     .optional()
 })
@@ -43,7 +43,15 @@ export const getProductById = async (req: Request, res: Response) => {
 }
 //Create a new product
 export const createProduct = async (req: Request, res: Response) => {
-  const resultado = productSchema.safeParse(req.body);
+  const files = req.files as Express.Multer.File[] | undefined;
+  const newPhotos = files?.map(file => file.path) || [];
+  const dataToValidate = {
+    ...req.body,
+    photos: newPhotos
+  }
+
+
+  const resultado = productSchema.safeParse(dataToValidate);
   if (!resultado.success) {
     return res.status(400).json({ errors: resultado.error.issues });
   }

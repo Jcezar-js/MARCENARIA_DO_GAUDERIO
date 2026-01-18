@@ -22,7 +22,7 @@ const userSchema = z.object({
     .refine((password) => /[!@#$%^&*(),.?":{}|<>]/.test(password), { message: 'A senha deve conter pelo menos um caractere especial' }),
 })
 
-export const updatePasswordSchema = z
+const updatePasswordSchema = z
 .object({
   currentPassword: z.string(),
   password: userSchema.shape.password,
@@ -31,18 +31,7 @@ export const updatePasswordSchema = z
 .refine((data) => data.password === data.confirmPassword, {
   message: 'As senhas não coincidem', 
 });
-// user registration
-export const register = async (req: Request, res: Response) => {
-  const {name, email, password} = req.body;
-  
-  try{
-    const user =  new User({name, email, password});
-    const newUser = await user.save();
-    res.status(201).json({message: 'Usuário registrado com sucesso', UserID: newUser._id, name: newUser.name, email: newUser.email});
-  } catch (err: any){
-    res.status(400).json({message: err.message});
-  }
-};
+
 
 //login user
 export const login = async (req: Request, res: Response)=> {
@@ -51,11 +40,11 @@ export const login = async (req: Request, res: Response)=> {
   try{
     const user = await User.findOne({email});
     if(!user){
-      return  res.status(401).json({message: 'Credenciais inválidas'});
+      return  res.status(401).json({message: ' Email ou senha incorretos! '});
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if(!isPasswordValid){
-      return res.status(401).json({message: 'Credenciais inválidas'});
+      return res.status(401).json({message: ' Email ou senha incorretos! '});
     }
 
     const secret = process.env.JWT_SECRET;
@@ -73,3 +62,36 @@ export const login = async (req: Request, res: Response)=> {
     return res.status(500).json({message: 'Erro interno no servidor'});
   }
 };
+
+export const updatePassword = async (req: Request, res: Response) => {
+  const result =  updatePasswordSchema.safeParse(req.body);
+
+  if (!result.success){
+    return res.status(400).json({errors: result.error.issues});
+  }
+
+  const {currentPassword, password } = result.data;
+  const userId = (req as any).userId;
+
+
+  try{
+    const user = await User.findById(userId);
+    if(!user){
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({message: 'Sua senha atual está incorreta'});
+    }
+  user.password = password;
+  await user.save();
+
+  res.json({ message: 'Senha alterada com sucesso!' });
+  } catch (err: any){
+    res.status (500).json({message: err.message});
+  }
+
+ 
+
+}

@@ -1,0 +1,16 @@
+services:
+  # The Database Service
+  mongodb:
+    image: mongo
+    container_name: landing-page-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: examplepassword
+
+volumes:
+  mongo-data:
