@@ -18,7 +18,7 @@ const materialSchemaValidator = z.object({
 
 });
 
-export const createMaterial = async (req: Request, res: Response) => {
+export const create_material = async (req: Request, res: Response) => {
   try {
     const validation = materialSchemaValidator.safeParse(req.body);
     if (!validation.success) {
@@ -33,7 +33,7 @@ export const createMaterial = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllMaterials = async (req: Request, res: Response) => {
+export const get_all_materials = async (req: Request, res: Response) => {
   try {
     const materials = await Material.find();
     res.json(materials);
@@ -42,7 +42,7 @@ export const getAllMaterials = async (req: Request, res: Response) => {
   }
 };
 
-export const getMaterialbyId = async (req:Request, res:Response) => {
+export const get_material_by_id = async (req:Request, res:Response) => {
   try {
     const material = await Material.findById(req.params.id);
     if (material == null){
@@ -54,7 +54,7 @@ export const getMaterialbyId = async (req:Request, res:Response) => {
   }
 };
 
-export const updateMaterial = async (req:Request, res:Response) => {
+export const update_material = async (req:Request, res:Response) => {
   try {
     const validation = materialSchemaValidator.partial().safeParse(req.body);
     if (!validation.success) {
@@ -71,7 +71,7 @@ export const updateMaterial = async (req:Request, res:Response) => {
   }
 };
 
-export const deleteMaterial = async (req:Request, res:Response) => {
+  export const delete_material = async (req:Request, res:Response) => {
   try {
     const material = await Material.findByIdAndDelete(req.params.id);
     if (material == null){

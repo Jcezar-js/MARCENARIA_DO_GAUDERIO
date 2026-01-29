@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import Product from '../models/product_schema';
-import { calculateProductPrice } from './pricing_service';
+import { calculateProductPrice } from '../services/pricing_service';
 import {z} from 'zod';
 
 const productSchema = z.object({
@@ -22,7 +22,7 @@ const productSchema = z.object({
 })
 
 // Get all products
-export const getAllProducts = async (req: Request, res: Response) => {
+export const get_all_products = async (req: Request, res: Response) => {
   try {
     const products = await Product.find();
     res.json(products);
@@ -31,7 +31,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
   }
 }
 //Get product by ID
-export const getProductById = async (req: Request, res: Response) => {
+export const get_product_by_id = async (req: Request, res: Response) => {
   try {
     const product = await Product.findById(req.params.id);
     if (product == null){
@@ -43,7 +43,7 @@ export const getProductById = async (req: Request, res: Response) => {
   }
 }
 //Create a new product
-export const createProduct = async (req: Request, res: Response) => {
+export const create_product = async (req: Request, res: Response) => {
   const files = req.files as Express.Multer.File[] | undefined;
   const newPhotos = files?.map(file => file.path) || [];
   const dataToValidate = {
@@ -77,7 +77,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
 
 //Update an existing product
-export const updateProduct = async (req: Request, res: Response) => {
+export const update_product = async (req: Request, res: Response) => {
   try{
     //Valida ID busca e atualiza em tempo real 
     // O { new: true } diz ao Mongoose para retornar o objeto JÁ atualizado, não o antigo.
@@ -98,7 +98,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
   //Delete a product
 
-export const deleteProduct = async (req: Request, res: Response) => {
+export const delete_product = async (req: Request, res: Response) => {
     try {
       const product = await Product.findByIdAndDelete(req.params.id);
       if (product == null){
@@ -112,7 +112,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
   }
 
 
-  export const getProductQuote = async (req: Request, res: Response) => {
+    export const get_product_quote = async (req: Request, res: Response) => {
     const productId = req.params.id;
 
     //zod para validar dimensões enviadas pelo cliente

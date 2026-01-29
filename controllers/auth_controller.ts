@@ -1,8 +1,11 @@
-import {Request, Response} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import User from '../models/user_schema';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {z} from 'zod';
+import { appError } from '../middlewares/error_handling_middleware';
+
+
 //user validation schema
 const userSchema = z.object({
   name: z
@@ -34,13 +37,13 @@ const updatePasswordSchema = z
 
 
 //login user
-export const login = async (req: Request, res: Response)=> {
+export const login = async (req: Request, res: Response, next: NextFunction)=> {
 
   const {email, password} = req.body;
   try{
     const user = await User.findOne({email});
     if(!user){
-      return  res.status(401).json({message: ' Email ou senha incorretos! '});
+      return next(new appError('Email ou senha incorretos!', 401));
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if(!isPasswordValid){
@@ -63,7 +66,7 @@ export const login = async (req: Request, res: Response)=> {
   }
 };
 
-export const updatePassword = async (req: Request, res: Response) => {
+export const update_password = async (req: Request, res: Response) => {
   const result =  updatePasswordSchema.safeParse(req.body);
 
   if (!result.success){
