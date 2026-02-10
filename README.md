@@ -1,9 +1,8 @@
-```markdown
 # API Landing Page - Setup & Run
 
 Este guia contém as instruções exatas para configurar e rodar o ambiente de desenvolvimento, utilizando Docker (ou Podman) para o banco de dados e Node.js para a aplicação.
 
-## ?? Pré-requisitos
+## Pré-requisitos
 
 Certifique-se de ter instalado:
 - **Node.js** (v18 ou superior) & npm
@@ -11,7 +10,7 @@ Certifique-se de ter instalado:
 
 ---
 
-## ?? Passo a Passo (Setup Inicial)
+## Passo a Passo (Setup Inicial)
 
 ### 1. Configurar Variáveis de Ambiente
 Crie um arquivo `.env` na raiz do projeto. Sem isso, a aplicação **não iniciará**.
@@ -45,16 +44,10 @@ Certifique-se de que o arquivo `docker-compose.yml` existe na raiz.
 
 **Para usuários Docker:**
 
-Run 
 ```bash
 sudo dockerd
-
-```
-And 
-
-```bash
+# Em outro terminal:
 sudo docker-compose up -d
-
 ```
 
 *Verifique se o container está rodando:*
@@ -76,7 +69,7 @@ npm install
 
 ---
 
-## ?? Rodando a Aplicação
+## Rodando a Aplicação
 
 Para iniciar o servidor em modo de desenvolvimento (com hot-reload via `ts-node-dev`):
 
@@ -87,12 +80,12 @@ npm run devStart
 
 O terminal deve exibir:
 
-> Server Started on port 3001
-> Connected to Database
+> Conectado ao MongoDB
+> Server iniciado na porta 3001
 
 ---
 
-## ?? Troubleshooting (Resolução de Problemas)
+## Troubleshooting (Resolução de Problemas)
 
 **Erro: `permission denied` ao rodar docker**
 
@@ -110,13 +103,30 @@ O terminal deve exibir:
 
 ---
 
-## ?? Estrutura do Docker Compose
+## Estrutura do Docker Compose
 
-O arquivo `docker-compose.yml` sobe um MongoDB 7.0 com as seguintes credenciais padrão (para dev):
+O arquivo `docker-compose.yml` sobe um MongoDB (imagem `mongo`) com as seguintes credenciais padrão (para dev):
 
 * **User:** root
 * **Pass:** examplepassword
 * **Port:** 27017
 * **Volume:** Persistente em `mongo-data`
 
+---
+
+## Variáveis opcionais e primeiro usuário
+
+O `.env.example` inclui variáveis usadas por outros recursos:
+
+| Variável | Uso |
+|----------|-----|
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Upload de fotos de produtos (Cloudinary). Sem elas, criar/editar produtos com fotos falha. |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Criação do primeiro usuário admin. |
+
+**Criar o usuário admin** (após MongoDB rodando e `.env` configurado):
+
+```bash
+npx ts-node scripts/create_admin.ts
 ```
+
+O script cria um usuário com o email e senha definidos em `ADMIN_EMAIL` e `ADMIN_PASSWORD`. Execute apenas uma vez (ou quando quiser resetar a senha do admin).
